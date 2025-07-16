@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>German Income Tax Brackets</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 75%;">
+        <canvas id="taxChart"></canvas>
+    </div>
+    <script>
+        // Get the context of the canvas element
+        const ctx = document.getElementById('taxChart').getContext('2d');
+        const durchschnittSteuersatzData = [0.00, 3.23, 8.20, 11.71, 14.34, 16.48, 18.30, 19.91, 21.38, 22.74, 24.03, 25.24, 26.41, 27.45, 28.36, 29.16, 29.88, 30.51, 31.09];
+
+
+        // Define the data for the chart (replace with actual data from the chart)
+        const data = {
+            labels: [
+    "0", "5000", "10000", "15000", "20000", "25000", "30000",
+    "35000", "40000", "45000", "50000", "55000", "60000",
+    "65000", "70000", "75000", "80000", "85000", "90000",
+    "95000", "100000"
+],
+            datasets: [{
+                label: 'Average Tax Rate (%)',
+                data: durchschnittSteuersatzData,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
+
+        // Define the configuration options
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Income (€)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Average Tax Rate (%)'
+                        },
+                        min: 0,
+                        max: 50
+                    }
+                }
+            }
+        };
+
+        // Create the chart
+        const taxChart = new Chart(ctx, config);
+    </script>
+</body>
+</html>
+
