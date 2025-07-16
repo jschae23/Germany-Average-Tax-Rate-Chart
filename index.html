@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Calculations</title>
+    <title>Germany - Tax Visualisation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -78,53 +78,65 @@
 <div class="container">
     <div class="tab-container">
         <ul class="tab-list">
-            <li>
-                <button class="tab-button active" onclick="switchTab('income')">
-                    Income Tax
-                </button>
-            </li>
-            <li>
-                <button class="tab-button" onclick="switchTab('capital')">
-                    Capital Gains Tax
-                </button>
-            </li>
+            <li><button class="tab-button active" onclick="switchTab(event, 'income')">Income Tax</button></li>
+            <li><button class="tab-button" onclick="switchTab(event, 'capital')">Capital Gains Tax</button></li>
+            <li><button class="tab-button" onclick="switchTab(event, 'social-security')">Social Security Considerations</button></li>
         </ul>
     </div>
-
     <div id="income-content" class="tab-content active">
         <div class="chart-container">
             <canvas id="incomeChart"></canvas>
         </div>
     </div>
-
     <div id="capital-content" class="tab-content">
         <div class="chart-container">
             <canvas id="capitalChart"></canvas>
         </div>
     </div>
+    <div id="social-security-content" class="tab-content">
+        <div class="chart-container">
+            <canvas id="socialSecurityChart"></canvas>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Income Tax Chart
-    const incomeCtx = document.getElementById('incomeChart').getContext('2d');
-    const incomeChart = new Chart(incomeCtx, {
-        type: 'line',
-        data: {
-            labels: [
-                "0", "5000", "10000", "15000", "20000", "25000", "30000",
-                "35000", "40000", "45000", "50000", "55000", "60000",
-                "65000", "70000", "75000", "80000", "85000", "90000",
-                "95000", "100000"
-            ],
-            datasets: [{
-                label: 'Average Tax Rate (%)',
-                data: [0.00, 0.00, 0.00, 3.23, 8.20, 11.71, 14.34, 16.48, 18.30, 19.91, 21.38, 22.74, 24.03, 25.24, 26.41, 27.45, 28.36, 29.16, 29.88, 30.51, 31.09],
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                tension: 0.1
-            }]
-        },
-        options: {
+    function createChart(ctx, type, labels, datasets, options) {
+        return new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: options
+        });
+    }
+
+    function switchTab(event, tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        document.getElementById(tabName + '-content').classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        const incomeChart = createChart(incomeCtx, 'line', [
+            "0", "5000", "10000", "15000", "20000", "25000", "30000",
+            "35000", "40000", "45000", "50000", "55000", "60000",
+            "65000", "70000", "75000", "80000", "85000", "90000",
+            "95000", "100000"
+        ], [{
+            label: 'Average Tax Rate (%)',
+            data: [0.00, 0.00, 0.00, 3.23, 8.20, 11.71, 14.34, 16.48, 18.30, 19.91, 21.38, 22.74, 24.03, 25.24, 26.41, 27.45, 28.36, 29.16, 29.88, 30.51, 31.09],
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+            tension: 0.1
+        }], {
             responsive: true,
             plugins: {
                 tooltip: {
@@ -151,24 +163,18 @@
                     max: 35
                 }
             }
-        }
-    });
+        });
 
-    // Capital Gains Tax Chart
-    const capitalCtx = document.getElementById('capitalChart').getContext('2d');
-    const capitalChart = new Chart(capitalCtx, {
-        type: 'line',
-        data: {
-            labels: ["0", "250", "500", "750", "1000", "1250", "1500", "1750", "2000", "2250", "2500", "2750", "3000", "3250", "3500", "3750", "4000", "4250", "4500", "4750", "5000", "5250", "5500", "5750", "6000", "6250", "6500", "6750", "7000"],
-            datasets: [{
-                label: 'Average Tax Rate (%)',
-                data: [0.0, 0.0, 0.0, 0.0, 5.28, 8.8, 11.31, 13.2, 14.52, 15.84, 16.7, 17.57, 18.2, 18.83, 19.3, 19.78, 20.15, 20.51, 20.8, 21.1, 21.32, 21.54, 21.76, 21.98, 22.14, 22.29, 22.44, 22.6],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                tension: 0.1
-            }]
-        },
-        options: {
+        const capitalCtx = document.getElementById('capitalChart').getContext('2d');
+        const capitalChart = createChart(capitalCtx, 'line', [
+            "0", "250", "500", "750", "1000", "1250", "1500", "1750", "2000", "2250", "2500", "2750", "3000", "3250", "3500", "3750", "4000", "4250", "4500", "4750", "5000", "5250", "5500", "5750", "6000", "6250", "6500", "6750", "7000"
+        ], [{
+            label: 'Average Tax Rate (%)',
+            data: [0.0, 0.0, 0.0, 0.0, 5.28, 8.8, 11.31, 13.2, 14.52, 15.84, 16.7, 17.57, 18.2, 18.83, 19.3, 19.78, 20.15, 20.51, 20.8, 21.1, 21.32, 21.54, 21.76, 21.98, 22.14, 22.29, 22.44, 22.6],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            tension: 0.1
+        }], {
             responsive: true,
             plugins: {
                 tooltip: {
@@ -195,26 +201,88 @@
                     max: 25
                 }
             }
-        }
+        });
+
+        const socialSecurityCtx = document.getElementById('socialSecurityChart').getContext('2d');
+        const combinedData = [
+            { label: 0, value: 0.00 },
+            { label: 5000, value: 2656.50 },
+            { label: 10000, value: 6579.00 },
+            { label: 15000, value: 10501.50 },
+            { label: 20000, value: 14424.00 },
+            { label: 25000, value: 18346.50 },
+            { label: 30000, value: 22269.00 },
+            { label: 35000, value: 26191.50 },
+            { label: 40000, value: 30114.00 },
+            { label: 45000, value: 34036.50 },
+            { label: 50000, value: 37959.00 },
+            { label: 55000, value: 41881.50 },
+            { label: 60000, value: 45804.00 },
+            { label: 65000, value: 49937.25 },
+            { label: 70000, value: 54070.50 }
+        ];
+        const employerCosts = [0.00, 6092.00, 12480.00, 18727.00, 24974.00, 31207.00, 37455.00, 43687.00, 49934.00, 56182.00, 62429.00, 68662.00, 74910.00, 81142.00, 86991.00];
+        const labels = combinedData.map(entry => entry.label.toString().slice(0,2)+"k");
+        const value1 = combinedData.map(entry => entry.label);
+        const value2 = combinedData.map(entry => entry.value);
+
+        const socialSecurityChart = createChart(socialSecurityCtx, 'line', labels, [
+            {
+                label: 'Employer Cost',
+                data: employerCosts,
+                borderColor: 'rgb(230, 85, 85)',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                fill: false,
+                tension: 0.1,
+            },
+            {
+                label: 'Employee Gross Salary',
+                data: value1,
+                borderColor: 'rgb(60, 179, 113)',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                fill: false,
+                tension: 0.1,
+            },
+            {
+                label: 'Social Security Deducted Salary',
+                data: value2,
+                borderColor: 'rgb(70, 130, 180)',
+                backgroundColor: 'rgba(173, 216, 230, 0.2)',
+                fill: false,
+                tension: 0.1,
+            }
+        ], {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: €${context.raw.toFixed(2)}`;
+                        }
+                    }
+                },
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Gross Salary (€)'
+                    },
+                    beginAtZero: true
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Amount (€)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        });
     });
-
-    function switchTab(tabName) {
-        // Hide all tab contents
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-
-        // Remove active class from all tab buttons
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.classList.remove('active');
-        });
-
-        // Show selected tab content
-        document.getElementById(tabName + '-content').classList.add('active');
-
-        // Add active class to selected tab button
-        event.target.classList.add('active');
-    }
 </script>
 </body>
 </html>
