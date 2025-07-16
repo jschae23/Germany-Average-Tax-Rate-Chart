@@ -29,14 +29,14 @@ const socialSecurityDatasets = [
     },
     {
         label: 'Employee Gross Salary',
-        data: ssRawData.map(e => e.label),
+        data: socialSecurityRawData.map(e => e.label),
         borderColor: 'rgb(60, 179, 113)',
         backgroundColor: 'transparent',
         tension: 0.1
     },
     {
         label: 'Social Security Deducted Salary',
-        data: ssRawData.map(e => e.value),
+        data: socialSecurityRawData.map(e => e.value),
         borderColor: 'rgb(70, 130, 180)',
         backgroundColor: 'rgba(173, 216, 230, 0.2)',
         tension: 0.1
